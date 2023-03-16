@@ -24,12 +24,12 @@ public:
     auto operator+=(Measure const &b)
     {
         val_ += b.getValue();
-        delta_ += b.getValue();
+        delta_ += b.getDelta();
     }
     auto operator-=(Measure const &b)
     {
         val_ -= b.getValue();
-        delta_ += b.getValue();
+        delta_ += b.getDelta();
     }
     auto operator*=(Measure const &b)
     {
@@ -79,13 +79,13 @@ auto operator+(Measure const &a, Measure const &b)
 {
     Measure res{a};
     res += b;
-    return a;
+    return res;
 }
 auto operator-(Measure const &a, Measure const &b)
 {
     Measure res{a};
     res -= b;
-    return a;
+    return res;
 }
 auto operator*(Measure const &a, Measure const &b)
 {
@@ -154,6 +154,12 @@ template<typename T>
 auto operator/(T k,Measure const& b){
     static_assert(std::is_arithmetic<T>());
     return Measure{k/b.getValue(),k/(b.getValue()*b.getValue())*b.getDelta()};
+}
+
+//CONFRONTO
+bool operator==(Measure const& a, Measure const& b){
+    double eps=1e9;
+    return a.getValue()-b.getValue()<eps && a.getDelta()-b.getDelta()<eps;
 }
 
 
